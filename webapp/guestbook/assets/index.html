@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Guest Book</title>
+</head>
+
+<body>
+  <h1>Guest Book</h1>
+  <!-- 
+    This section of the document specifies the table that will
+    be used to display the list of Guests and their Entries 
+   -->
+  <table>
+    <tr>
+      <th>Author</th>
+      <th>Text</th>
+    </tr>
+    <td>Vivek</td>
+    <td>I like Golang</td>
+    </tr>
+  </table>
+  <br/>
+
+  <!-- 
+    This section contains the form, that will be used to hit the 
+    `POST /gbe` API that we will build in the next section
+   -->
+  <form action="/gbe" method="post">
+    Author:
+    <input type="text" name="author">
+    <br/> Text:
+    <input type="text" name="text">
+    <br/>
+    <input type="submit" value="Submit">
+  </form>
+
+  <!-- 
+    Finally, the last section is the script that will
+    run on each page load to fetch the list of entries 
+    and add them to our existing table
+   -->
+  <script>
+    entriesTable = document.querySelector("table")
+
+    /*
+    Use the browsers `fetch` API to make a GET call to /gbe
+    We expect the response to be a JSON list of entries, of the
+    form :
+    [
+      {"author":"...","text":"..."},
+      {"author":"...","text":"..."}
+    ]
+    */
+    fetch("/gbe")
+      .then(response => response.json())
+      .then(entriesList => {
+        //Once we fetch the list, we iterate over it
+        entriesList.forEach(entry => {
+          // Create the table row
+          row = document.createElement("tr")
+
+          // Create the table data elements for the author and text columns
+          author = document.createElement("td")
+          author.innerHTML = entry.author
+          text = document.createElement("td")
+          text.innerHTML = entry.text
+
+          // Add the data elements to the row
+          row.appendChild(author)
+          row.appendChild(text)
+          // Finally, add the row element to the table itself
+          entriesTable.appendChild(row)
+        })
+      })
+  </script>
+</body>
+
+</html>
