@@ -1,5 +1,3 @@
-Postgres DB should be running
-
 docker build -t gb-image .
 
 docker-compose up
