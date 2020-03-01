@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  guestbook:
+    depends_on:
+        - postgres
+    hostname: guestbook
+    image: gb-image
+    ports:
+      - "8090:8090"
+    networks: 
+      - backend
+  postgres:
+    hostname: postgres
+    image: postgres:alpine
+    container_name: "postgres"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_DB=temp
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks: 
+      - backend
+networks:
+  backend:
+    driver: "bridge"
