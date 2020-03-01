@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/golang-migrate/migrate"
 	_ "github.com/golang-migrate/migrate/database/postgres"
@@ -38,29 +39,34 @@ func newRouter() *mux.Router {
 	return r
 }
 
+func getDbConnection() *sql.DB {
+	for i := 1; i <= 5; i++ {
+		connString := "host=postgres port=5432 user=postgres password=example dbname=temp sslmode=disable"
+		_db, _err := sql.Open("postgres", connString)
+		_err = _db.Ping()
+		if _err == nil {
+			return _db
+		}
+		fmt.Println("Waiting for connection")
+		time.Sleep(3 * time.Second)
+	}
+	return nil
+}
+
 func main() {
 	fmt.Println("Starting server...")
-	connString := "host=0.0.0.0 port=54320 user=postgres password=example dbname=temp sslmode=disable"
-	db, err := sql.Open("postgres", connString)
 
-	if err != nil {
-		panic(err)
-	}
-	err = db.Ping()
-
-	if err != nil {
-		panic(err)
-	}
-
-	InitStore(&dbStore{db: db})
+	db := getDbConnection()
 
 	m, err := migrate.New(
 		"file://migrations",
-		"postgres://postgres:example@0.0.0.0:54320/temp?sslmode=disable")
+		"postgres://postgres:example@postgres:5432/temp?sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
-	m.Up(); 
+	m.Up()
+
+	InitStore(&dbStore{db: db})
 
 	// The router is now formed by calling the `newRouter` constructor function
 	// that we defined above. The rest of the code stays the same
