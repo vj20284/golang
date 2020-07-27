@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inotify-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inotify-app
+  template:
+    metadata:
+      labels:
+        app: inotify-app
+    spec:
+      containers:
+      - name: inotify-app-container
+        image: vivekjeyakumar/inotify
+        ports:
+        - containerPort: 8090 
+        volumeMounts:
+            - mountPath: /mnt/
+              name: test-volume
+      volumes:
+      - name: test-volume
+        hostPath:
+            # directory location on host
+            path: /Users/vivek/temp
