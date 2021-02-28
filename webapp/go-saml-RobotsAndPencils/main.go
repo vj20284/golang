@@ -22,8 +22,8 @@ func init() {
 	sp = saml.ServiceProviderSettings{
 		PublicCertPath:              "default.crt",
 		PrivateKeyPath:              "default.key",
-		IDPSSOURL:                   "https://dev-31010350.okta.com/app/dev-31010350_samlproxytest_1/exk6072f30AwzljqY5d6/sso/saml",
-		IDPSSODescriptorURL:         "http://www.okta.com/exk6072f30AwzljqY5d6",
+		IDPSSOURL:                   "https://<IDP>/sso/saml",
+		IDPSSODescriptorURL:         "http://www.okta.com/<ID>",
 		IDPPublicCertPath:           "idp.crt",
 		SPSignRequest:               true,
 		AssertionConsumerServiceURL: "http://localhost:28080/saml_consume",
