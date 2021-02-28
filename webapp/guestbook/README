@@ -1,3 +1,6 @@
+Postgres DB should be running
+
 docker build -t gb-image .
 
-docker-compose up
+docker run -it --rm --name gb-instance -p 8090:8090 \
+   -v ./guestbook:/go/src/app -w /go/src/app gb-image

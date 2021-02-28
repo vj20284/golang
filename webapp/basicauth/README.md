@@ -1,0 +1,1 @@
+curl --user username:password http://localhost:8080/
